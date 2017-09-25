@@ -13,7 +13,11 @@
 # example 3: ./prevent_deletion.sh '*.txt' recurse
 #             will save all .txt files in the current directory 
 #             and in every subdirectory
-
+# 
+# NOTE: this script will not modify tar-ed or zipped files, as
+#       modifying compressed files will corrupt the compression
+#       To update these files, you want to copy each file into
+#       new file.
 
 ### FUNCTIONS ###
 
@@ -23,7 +27,11 @@
 function main {
   TO_SAVE=$@
   for file in $TO_SAVE; do 
-    if [[ -f "$file" ]]; then
+    # if encounter a zipped or tarred file, leave it alone!
+    if [[ $file =~ \.(gz|tar|zip)$ ]]; then
+      if [[ $VERBOSE == true ]]; then echo "Did not modify $file"; fi
+      continue
+    elif [[ -f "$file" ]]; then
       save $file
     fi
   done
@@ -36,7 +44,11 @@ function recurse {
   PATTERN="*$FILE_TYPE"
   ALL=$@
   for file in $ALL; do
-    if [[ -d "$file" ]]; then
+    # if encounter a zipped or tarred file, leave it alone!
+    if [[ $file =~ \.(gz|tar|zip)$ ]]; then
+      if [[ $VERBOSE == true ]]; then echo "Did not modify $file"; fi
+      continue
+    elif [[ -d "$file" ]]; then
       # if encounter a directory, enter the dir and call
       # this function again on the target file group
       recurse $file/*
