@@ -14,13 +14,13 @@ for i in $FQ; do
     #BASE=$(basename $(basename $(basename $( basename $i .gz) .txt) .fq) .fastq)
     BASE=$( basename $i .fastq.gz )
     #echo "hisat2 --no-unal -p 3 --rg-id $BASE --rg SM:$BASE --very-sensitive -x $1 -U $i > temp$BASE.sam" >> TEMPBATCH.sbatch
-    echo "srun hisat2 -p 3 --score-min L,-0.6,-0.6 --rg-id $BASE --rg SM:$BASE --very-sensitive -x $1 -U $i > temp$BASE.sam" >> TEMPBATCH.sbatch
-    echo "samtools view -bSq 10 temp$BASE.sam > ${BASE}-UNSORTED.bam " >> TEMPBATCH.sbatch
+    echo "srun hisat2 -p 3 --score-min L,-0.6,-0.6 --rg-id $BASE --rg SM:$BASE -x $1 -U $i > temp${BASE}.sam" >> TEMPBATCH.sbatch
+    echo "samtools view -bSq 10 temp${BASE}.sam > ${BASE}-UNSORTED.bam " >> TEMPBATCH.sbatch
     #echo "rm temp$BASE.sam" >> TEMPBATCH.sbatch
-    echo "srun samtools sort ${BASE}-UNSORTED.bam > ${BASE}_UNDEDUP.bam" >> TEMPBATCH.sbatch 
+    echo "srun samtools sort ${BASE}-UNSORTED.bam ${BASE}_UNDEDUP" >> TEMPBATCH.sbatch 
     echo "srun java -Xmx4g -jar /share/PI/spalumbi/programs/picard.jar MarkDuplicates REMOVE_DUPLICATES=true INPUT=${BASE}_UNDEDUP.bam OUTPUT=${BASE}.bam METRICS_FILE=${BASE}-metrics.txt VALIDATION_STRINGENCY=LENIENT" >> TEMPBATCH.sbatch
     echo "srun samtools index ${BASE}.bam" >> TEMPBATCH.sbatch
-    echo "rm ${BASE}-UNSORTED.bam" >> TEMPBATCH.sbatch
+#    echo "rm ${BASE}-UNSORTED.bam" >> TEMPBATCH.sbatch
     let COUNTER=COUNTER+1
     if [ $COUNTER -eq $CHUNK ]; then
     sbatch TEMPBATCH.sbatch
