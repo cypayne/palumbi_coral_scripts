@@ -7,10 +7,16 @@
     will be combined in their respective Level 2 taxonomic classification.
 
     usage: ./mothur-taxa-summary.py taxonomy_file.csv counts_matrix.csv level_#
+    ex. ./mothur-taxa-summary.py taxonomy_file.csv counts_matrix.csv 2
 
     output: counts-summary.csv - contains counts matrix
                                  columns: samples
                                  rows: combined level classification counts
+
+    NOTE for running on Sherlock 2.0:
+      python is not installed by default on Sherlock 2.0, so before running 
+      check that python is available. If it is not loaded, run the following:
+          module load python
 
     CYP 01/17/2017
 '''
@@ -19,7 +25,7 @@ import sys
 import csv
 
 # DEBUG mode is OFF
-DEBUG = True 
+DEBUG = False 
 
 # global variables
 seq2tax_dict = {}         # { sequence_ID : taxon_name }
@@ -40,8 +46,6 @@ def collect_taxon_info():
     rdr = csv.reader(tax_file)
     counts_row_list = list(rdr)
     for row in counts_row_list:
-      # seq_ID in tax file differs from those in counts
-      # file, need to replace "-" with "_" to match
       # sequence name is first item in row
       seq_name = row[0]
       seq_ID = seq_name.replace("-", "_")
@@ -78,7 +82,8 @@ def collect_counts_info():
     for row in counts_row_list[1:]:
 
       # collect seq_ID from first column
-      seq_ID = row[0]
+      seq_name = row[0]
+      seq_ID = seq_name.replace("-", "_")
 
       if seq_ID not in seq2tax_dict: continue
       else: tax = seq2tax_dict[seq_ID] 
