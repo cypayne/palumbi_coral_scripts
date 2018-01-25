@@ -1,7 +1,7 @@
-Scripts for processing coral genomic data
+Scripts for processing genomic data
 =========================================
 
-These scripts are routinely used in the Palumbi lab @hopkinsmarinestation to process and analyze coral genomic and transcriptomic data. 
+These scripts are routinely used by the Palumbi lab @hopkinsmarinestation to process and analyze genomic data. 
 Please note that some scripts are not optimized for best time or space complexity.
 
 Contact
