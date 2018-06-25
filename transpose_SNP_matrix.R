@@ -1,0 +1,12 @@
+setwd('/scratch/PI/spalumbi/cheyenne/fish_rna-seq/Clupea_harengus/')
+print("1")
+data<-read.delim('/scratch/PI/spalumbi/cheyenne/fish_rna-seq/Clupea_harengus/C_harengus_16inds_SNP.012',header=F)
+print("2")
+pos<-read.delim('/scratch/PI/spalumbi/cheyenne/fish_rna-seq/Clupea_harengus/C_harengus_16inds_SNP.012.pos',header=F)
+ind<-read.delim('/scratch/PI/spalumbi/cheyenne/fish_rna-seq/Clupea_harengus/C_harengus_16inds_SNP.012.indv',header=F)
+data<-data[,-1]
+colnames(data)<-paste(pos[,1],pos[,2],sep='-')
+rownames(data)<-ind[,1]
+snpsmatrix<-data.matrix(data)
+transposed<-t(snpsmatrix)
+write.table(transposed,file="C_hareng_16_SNPs.txt",quote=FALSE,row.names=TRUE,col.names=TRUE,eol="\n")

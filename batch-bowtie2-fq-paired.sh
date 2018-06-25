@@ -2,14 +2,14 @@
 #USAGE: bash batch-bowtie2-fq-paired.sh b2index 1  *_1.txt.gz
 #if you don't have a bowtie2 index, build it with "bowtie2-build <reference>.fa basename"
 
-#Use this script on raw PE sequences (no trim/clip/flash). Thsi script uses sensitive end to end mapping, map qual 10, and deduplicates  
+#Use this script on raw PE sequences (no trim/clip/flash). This script uses sensitive end to end mapping, map qual 10, and deduplicates  
 
 CHUNK=$2
 COUNTER=0
 FQ="${@:3}"
 for i in $FQ; do
     if [ $COUNTER -eq 0 ]; then
-    echo -e "#!/bin/bash\n#SBATCH -p owners,spalumbi\n#SBATCH --ntasks=1\n#SBATCH --cpus-per-task=16\n#SBATCH -t 24:00:00\n#SBATCH --mem 48000" > TEMPBATCH.sbatch; fi
+    echo -e "#!/bin/bash\n#SBATCH -p spalumbi,owners,normal,hns\n#SBATCH --ntasks=1\n#SBATCH --cpus-per-task=16\n#SBATCH -t 24:00:00\n#SBATCH --mem 48000" > TEMPBATCH.sbatch; fi
     BASE=$( basename $i _1.txt.gz )
 #    echo "srun bowtie2 --end-to-end -p 16 -X 1500 --rg-id $BASE --score-min L,0,-0.2 --rg SM:$BASE --very-sensitive -x $1 -1 ${BASE}_1.txt.gz -2 ${BASE}_2.txt.gz > $BASE.sam" >> TEMPBATCH.sbatch
     echo "srun bowtie2 --end-to-end -p 16 -X 1500 --rg-id $BASE --rg SM:$BASE --very-sensitive -x $1 -1 ${BASE}_1.txt.gz -2 ${BASE}_2.txt.gz > $BASE.sam" >> TEMPBATCH.sbatch

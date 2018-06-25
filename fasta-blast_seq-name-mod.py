@@ -9,6 +9,7 @@
 
     usage: ./fasta-blast_seq-name-mod.py sequences.fasta coi_blast.out cr_blast.out
     
+    CYP 01/25/2018
 '''
 
 import sys

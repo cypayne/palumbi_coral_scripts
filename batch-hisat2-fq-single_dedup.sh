@@ -12,7 +12,7 @@ for i in $FQ; do
     if [ $COUNTER -eq 0 ]; then
     echo -e "#!/bin/bash\n#SBATCH -p owners,spalumbi\n#SBATCH --ntasks=1\n#SBATCH -c 3\n#SBATCH -t 24:00:00\n#SBATCH --mem 48000" > TEMPBATCH.sbatch; fi
     #BASE=$(basename $(basename $(basename $( basename $i .gz) .txt) .fq) .fastq)
-    BASE=$( basename $i .fastq.gz )
+    BASE=$( basename $i .fastq )
     #echo "hisat2 --no-unal -p 3 --rg-id $BASE --rg SM:$BASE --very-sensitive -x $1 -U $i > temp$BASE.sam" >> TEMPBATCH.sbatch
     echo "srun hisat2 -p 3 --score-min L,-0.6,-0.6 --rg-id $BASE --rg SM:$BASE -x $1 -U $i > temp$BASE.sam" >> TEMPBATCH.sbatch
     echo "samtools view -bSq 10 temp$BASE.sam > ${BASE}-UNSORTED.bam " >> TEMPBATCH.sbatch

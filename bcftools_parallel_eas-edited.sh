@@ -1,5 +1,3 @@
-#!/bin/bash
-# for calling SNPs
 #before running: mkdir vcfout
 #usage: bash bcftools_parallel.sh ref.fa vcfout 5 args *.bam
 # BEFORE RUNNING: mkdir vcfout (where data is)
@@ -18,9 +16,13 @@ echo $BAMS
 samtools faidx $1
 awk '{print $1,"0",$2-1}' ${1}.fai > $VCFOUT/REGIONS.bed
 nregions=($(wc -l $VCFOUT/REGIONS.bed))
-nlines=$(($nregions /  $NCPU))
-echo "Splitting into batches of "$nlines
-split $VCFOUT/REGIONS.bed -l $nlines $VCFOUT/TEMP-REGIONS
+if [ $NCPU -gt $nregions ]; then
+  nlines=$(($nregions /  $NCPU))
+  echo "Splitting into batches of "$nlines
+  split $VCFOUT/REGIONS.bed -l $nlines $VCFOUT/TEMP-REGIONS
+else
+  mv $VCFOUT/REGIONS.bed $VCFOUT/TEMP-REGIONS 
+fi
 
 for i in $VCFOUT/TEMP-REGIONS* ; do
     echo sending out batch $i

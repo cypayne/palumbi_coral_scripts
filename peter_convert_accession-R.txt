@@ -1,0 +1,47 @@
+# script to convert genbank accession numbers to full taxonomy information
+# downloading database and running commands generate heavy loading i.e. creating tmp files and needs lots of memory
+# run the following command before loading R in terminal --> "ulimit -s unlimited"
+
+
+# PETER's script, added 02/21/2018
+
+#install package
+install.packages("taxonomizr")
+# or install form github
+#devtools::install_github("sherrillmix/taxonomizr")
+
+# load package
+library(taxonomizr)
+
+# download nodes and names
+getNamesAndNodes()
+
+# download accession to taxa names
+getAccession2taxid()
+
+# download and include protein accession numbers
+getAccession2taxid(types='prot')
+
+# convert accession to database 
+read.accession2taxid(list.files('.','accession2taxid.gz$'),'accessionTaxa.sql')
+
+# load nodes and names into memory
+taxaNodes<-read.nodes('nodes.dmp')
+taxaNames<-read.names('names.dmp')
+
+# load data
+cobb <- read.table("cobb_accession_blastn.txt")
+
+# add header
+names(cobb) <- "accession"
+
+# convert accession to taxid
+cobbId<-accessionToTaxa(cobb$accession, "accessionTaxa.sql")
+head(cobbId)
+
+# retrieve taxonomy for ids from cobbId
+cobb_otu <- getTaxonomy(cobbId, taxaNodes, taxaNames, desiredTaxa = c("superkingdom","kingdom","phylum", "class", "order", "family", "genus", "species"), mc.cores = 1, debug = FALSE)
+head(cobb_otu)
+ 
+# write to file 
+write.csv(cobb_otu, file="cobb_otu")

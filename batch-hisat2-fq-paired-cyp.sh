@@ -16,8 +16,8 @@ for i in $FQ; do
     # -bSq 10
     echo "samtools view -bSq 4 ${BASE}.sam > ${BASE}_BTVS-UNSORTED.bam " >> TEMPBATCH.sbatch
     echo "srun samtools sort ${BASE}_BTVS-UNSORTED.bam > ${BASE}_UNDEDUP.bam" >> TEMPBATCH.sbatch
-    echo "srun java -Xmx4g -jar /share/PI/spalumbi/programs/picard.jar MarkDuplicates REMOVE_DUPLICATES=true INPUT=${BASE}_UNDEDUP.bam OUTPUT=${BASE}.bam METRICS_FILE=${BASE}-metrics.txt VALIDATION_STRINGENCY=LENIENT" >> TEMPBATCH.sbatch 
-    echo "srun samtools index ${BASE}.bam" >> TEMPBATCH.sbatch
+#    echo "srun java -Xmx4g -jar /share/PI/spalumbi/programs/picard.jar MarkDuplicates REMOVE_DUPLICATES=true INPUT=${BASE}_UNDEDUP.bam OUTPUT=${BASE}.bam METRICS_FILE=${BASE}-metrics.txt VALIDATION_STRINGENCY=LENIENT" >> TEMPBATCH.sbatch 
+    echo "srun samtools index ${BASE}_UNDEDUP.bam" >> TEMPBATCH.sbatch
     echo "rm ${BASE}.sam" >> TEMPBATCH.sbatch
     echo "rm ${BASE}_BTVS-UNSORTED.bam" >> TEMPBATCH.sbatch
     echo "rm ${BASE}_UNDEDUP.bam" >> TEMPBATCH.sbatch

@@ -27,7 +27,7 @@ scaf_name = ''
 scaffold = ''
 
 # change these variables as needed
-HEADER_REGEX = '@adi'
+HEADER_REGEX = '@Sc'
 DEBUG = False 
 
 with open(fasta_file, 'r') as fas:
@@ -37,7 +37,7 @@ with open(fasta_file, 'r') as fas:
       scaf_name = line 
     elif re.search(re.escape('+'), line) and not skip:  
       skip = True
-      contigs = re.split('N|n', scaffold) 
+      contigs = re.split('NNN|nnn', scaffold) 
       contig_num = 1
       for con in contigs:
         if con != '':

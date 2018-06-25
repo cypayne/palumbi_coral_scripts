@@ -11,7 +11,8 @@ for i in $FQ; do
     if [ $COUNTER -eq 0 ]; then
     echo -e "#!/bin/bash\n#SBATCH -p owners,spalumbi\n#SBATCH --ntasks=1\n#SBATCH --cpus-per-task=16\n#SBATCH -t 24:00:00\n#SBATCH --mem 48000" > TEMPBATCH.sbatch; fi
     BASE=$( basename $i _1.txt.gz )
-    echo "srun /scratch/PI/spalumbi/cheyenne/bwa-0.7.12/bwa mem $REF ${BASE}_1.txt.gz ${BASE}_2.txt.gz > ${BASE}.sam" >> TEMPBATCH.sbatch
+    echo "srun bwa mem -M -t 16 $REF ${BASE}_1.txt.gz ${BASE}_2.txt.gz > ${BASE}.sam" >> TEMPBATCH.sbatch
+    #echo "srun /scratch/PI/spalumbi/cheyenne/bwa-0.7.12/bwa mem $REF ${BASE}_1.txt.gz ${BASE}_2.txt.gz > ${BASE}.sam" >> TEMPBATCH.sbatch
     # -bSq 10
     echo "samtools view -bSq 4 ${BASE}.sam > ${BASE}_BTVS-UNSORTED.bam " >> TEMPBATCH.sbatch
     echo "srun samtools sort ${BASE}_BTVS-UNSORTED.bam > ${BASE}_UNDEDUP.bam" >> TEMPBATCH.sbatch

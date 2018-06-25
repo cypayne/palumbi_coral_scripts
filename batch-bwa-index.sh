@@ -7,4 +7,4 @@
 
 # usage: sbatch batch-bwa-index.sh genome.fa
  
-/scratch/PI/spalumbi/cheyenne/bwa-0.7.12/bwa index $1
+bwa index $1
