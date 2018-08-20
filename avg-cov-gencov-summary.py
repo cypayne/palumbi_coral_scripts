@@ -12,6 +12,8 @@
 '''
 
 import sys
+import decimal
+first = True
 
 scaf2avg_dict = {}
 
@@ -23,7 +25,9 @@ with open(sys.argv[1],'r') as infile:
   for line in infile:
     items = line.strip().split('\t')
     length = int(items[2]) - int(items[1])
-    coverage = int(items[3])
+
+    coverage = int(decimal.Decimal(items[3]))
+
     # add a new scaffold entry to dict if not already
     # in dictionary
     if not items[0] in scaf2avg_dict:
